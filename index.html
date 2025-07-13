@@ -80,10 +80,10 @@
             opacity: 0.9;
         }
         
-        /* GIF Display */
-        .gif-display {
+        /* Video Display */
+        .video-display {
             width: 100%;
-            height: 180px;
+            height: 210px;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
@@ -92,7 +92,7 @@
             border: 2px solid rgba(255,255,255,0.3);
         }
         
-        .gif-container {
+        .video-container {
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, var(--light), #b2ebf2);
@@ -102,20 +102,21 @@
             position: relative;
         }
         
-        .gif-text {
+        .video-text {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 91, 150, 0.7);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 8px;
-            font-size: 14px;
+            padding: 6px;
+            font-size: 12px;
             text-align: center;
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(13px);
+            z-index: 2;
         }
         
-        .gif-marquee {
+        .video-marquee {
             position: absolute;
             top: 10px;
             left: 0;
@@ -127,11 +128,27 @@
             text-align: center;
             backdrop-filter: blur(2px);
             border-radius: 20px;
-            width: 90%;
+            width: 75%;
             margin: 0 auto;
             overflow: hidden;
             white-space: nowrap;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+        
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: slide 15s linear infinite;
+        }
+        
+        /* YouTube iframe styling */
+        .youtube-iframe {
+            width: 200%;
+            height: 100%;
+            border: none;
+            position: relative;
+            z-index: 1;
         }
         
         /* Date Time Box */
@@ -262,7 +279,7 @@
                 font-size: 24px;
             }
             
-            .gif-display {
+            .video-display {
                 height: 200px;
             }
             
@@ -273,8 +290,8 @@
         
         /* Animation */
         @keyframes slide {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -287,17 +304,21 @@
             </div>
         </header>
         
-        <!-- GIF Display with Marquee -->
-        <div class="gif-display">
-            <div class="gif-container">
-                <!-- Replace with your actual GIF -->
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcW5uY3V5bWJ4d2M1dWx1Y2VjZ3R4bWx6NnA0Y2JtZzZ1eGZ0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7qE1YN7aBOFPRw8E/giphy.gif" alt="Security Animation" style="width:100%; height:100%; object-fit:cover;">
+        <!-- Video Display with Marquee -->
+        <div class="video-display">
+            <div class="video-container">
+                <!-- YouTube Video Embed -->
+                <iframe id="youtube-player" class="youtube-iframe"
+                    src="https://www.youtube.com/embed/0z8D8WUKu8I?autoplay=1&mute=1&loop=1&playlist=0z8D8WUKu8I&controls=0&rel=0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen>
+                </iframe>
                 
-                <div class="gif-marquee">
-                    <span class="marquee-text">SELAMAT DATANG DI SISTEM INFORMASI SECURITY KSOP PANARUKAN - PELAYANAN PRIMA UNTUK KESELAMATAN PELAYARAN</span>
+                <div class="video-marquee">
+                    <div class="marquee-text">SELAMAT DATANG DI SISTEM INFORMASI SECURITY KSOP PANARUKAN - PELAYANAN PRIMA UNTUK KESELAMATAN PELAYARAN</div>
                 </div>
                 
-                <div class="gif-text">
+                <div class="video-text">
                     MONITORING KEAMANAN KSOP PANARUKAN 
                 </div>
             </div>
@@ -360,26 +381,26 @@
             document.getElementById('jam').textContent = `${hours}:${minutes}:${seconds}`;
         }
         
-        // Animate Marquee Text
-        function animateMarquee() {
-            const marquee = document.querySelector('.marquee-text');
-            const containerWidth = document.querySelector('.gif-marquee').offsetWidth;
-            const textWidth = marquee.offsetWidth;
+        // Initialize Marquee
+        function initMarquee() {
+            const marqueeText = document.querySelector('.marquee-text');
+            const text = marqueeText.textContent;
+            // Duplicate text for seamless looping
+            marqueeText.textContent = text + ' ' + text;
             
-            // Calculate animation duration based on text length
-            const duration = Math.max(10, textWidth / 30);
-            
-            marquee.style.animation = `slide ${duration}s linear infinite`;
+            // Calculate duration based on text length
+            const duration = text.length / 5;
+            marqueeText.style.animationDuration = `${duration}s`;
         }
         
         // Initialize
         window.onload = function() {
+            // Initialize marquee
+            initMarquee();
+            
             // Update time immediately and every second
             updateDateTime();
             setInterval(updateDateTime, 1000);
-            
-            // Animate marquee
-            animateMarquee();
             
             // Add button press effect
             const buttons = document.querySelectorAll('.nav-button');
